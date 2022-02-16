@@ -143,3 +143,23 @@ number_of_instances: 2
     count: '{{ number_of_instances }}'
   when: sgs.groups
   register: instance
+
+# Install Docker CE
+  - hosts: my-instance-from-ansible
+    tasks:
+      - name: cp docker.repo
+        copy:
+          src: "/etc/yum.repos.d/docker-ce.repo"
+          dest: "/etc/yum.repos.d/docker-ce.repo"
+      - name: setup yum-utils
+        yum: name=yum-utils state=present
+      - name: setup device-mapper-persistent-data
+        yum: name=device-mapper-persistent-data state=present
+      - name: setup lvm2
+        yum: name=lvm2 state=present
+      - name: setup docker-ce
+        yum: name=docker-ce state=present
+      - name: service on
+        service: name=docker.service enabled=yes state=started
+
+# Deploy nginx container
