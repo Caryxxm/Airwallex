@@ -190,19 +190,15 @@ number_of_instances: 2
         - { src: "conf/nginx.conf.j2", dest: "{{ container_wdir }}/conf/nginx.conf", mode: "0664" }
   - name: create container
       ansible.builtin.docker_container:
-        # 4.1.容器名称和使用的镜像
         name: "{{ container_name }}"
         image: "{{ container_image }}"
         container_default_behavior: no_defaults
-        # 4.2.挂载卷：配置文件目录、日志目录、数据目录
         volumes:
           - "{{ container_wdir }}/conf/nginx.conf:/etc/nginx/nginx.conf:ro"
           - "{{ container_wdir }}/logs:/var/log/nginx"
           - "{{ container_wdir }}/data:/usr/share/nginx/html/:ro"
-        # 4.3.端口映射
         ports:
           - "8080:80"
-        # 4.4.设置环境变量
         env:
           TZ: 'Asia/Shanghai'
           LANG: zh_CN.UTF-8
